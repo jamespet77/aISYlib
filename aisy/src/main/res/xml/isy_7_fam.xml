@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<NodeFamily id="7" name="UDI">
+	<description>
+		Family of UDI devices
+	</description>
+	<nodeCategory id="9" name="Energy Management" >
+		<nodeSubCategory id="38" name="EM3 3 Phase Energy Monitor"/>
+	</nodeCategory>
+</NodeFamily>

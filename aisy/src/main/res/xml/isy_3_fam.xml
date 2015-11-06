@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<NodeFamily id="3" name="RCS">
+	<description>
+		Family of RCS devices including thermostats and load controllers
+	</description>
+	<nodeCategory id="2" name="Load Controller" >
+		<nodeSubCategory id="9" name="RCS Load Controller"/>
+	</nodeCategory>
+	<nodeCategory id="5" name="Thermostat">
+		<nodeSubCategory id="9" name="RCS Thermostat"/>
+	</nodeCategory>
+</NodeFamily>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<NodeFamily id="8" name="NCD">
+	<description>
+		Family of NCD Relay devices
+	</description>
+	<nodeCategory id="2" name="Switch/Relay Control" >
+		<nodeSubCategory id="02" name="Generic Relay"/>
+	</nodeCategory>
+</NodeFamily>

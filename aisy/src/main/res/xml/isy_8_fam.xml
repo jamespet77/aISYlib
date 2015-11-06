@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<NodeFamily id="8" name="Brultech">
+	<description>
+		Family of Brultech devices
+	</description>
+	<nodeCategory id="9" name="Energy Management" >
+		<nodeSubCategory id="39" name="ECM1240 Zigbee"/>
+	</nodeCategory>
+	<nodeCategory id="9" name="Energy Management" >
+		<nodeSubCategory id="40" name="GreenEye Monitor (GEM) Zigbee"/>
+	</nodeCategory>
+</NodeFamily>

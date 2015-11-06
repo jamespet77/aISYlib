@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<NodeFamily id="4" name="Z-Wave">
+	<description>
+		Z-Wave Family of devices
+	</description>
+   <isyNodeTypes>
+      <isyNodeType id="0" name="Uninitialized" />
+      <isyNodeType id="101" name="Unknown" />
+      <isyNodeType id="102" name="Alarm" />
+      <isyNodeType id="103" name="AV Control Point" />
+      <isyNodeType id="104" name="Binary Sensor" />
+      <isyNodeType id="105" name="Class A Motor Control" />
+      <isyNodeType id="106" name="Class B Motor Control" />
+      <isyNodeType id="107" name="Class C Motor Control" />
+      <isyNodeType id="108" name="Controller" />
+      <isyNodeType id="109" name="Dimmer Switch" />
+      <isyNodeType id="110" name="Display" />
+      <isyNodeType id="111" name="Door Lock" />
+      <isyNodeType id="112" name="Doorbell" />
+      <isyNodeType id="113" name="Entry Control" />
+      <isyNodeType id="114" name="Gateway" />
+      <isyNodeType id="115" name="Installer Tool" />
+      <isyNodeType id="116" name="Motor Multiposition" />
+      <isyNodeType id="117" name="Climate Sensor" />
+      <isyNodeType id="118" name="Multilevel Sensor" />
+      <isyNodeType id="119" name="Multilevel Switch" />
+      <isyNodeType id="120" name="On/Off Power Strip" />
+      <isyNodeType id="121" name="On/Off Power Switch" />
+      <isyNodeType id="122" name="On/Off Scene Switch" />
+      <isyNodeType id="123" name="Open/Close Valve" />
+      <isyNodeType id="124" name="PC Controller" />
+      <isyNodeType id="125" name="Remote" />
+      <isyNodeType id="126" name="Remote Control" />
+      <isyNodeType id="127" name="AV Remote Control" />
+      <isyNodeType id="128" name="Simple Remote Control" />
+      <isyNodeType id="129" name="Repeater" />
+      <isyNodeType id="130" name="Residential HRV" />
+      <isyNodeType id="131" name="Satellite Receiver" />
+      <isyNodeType id="132" name="Satellite Receiver" />
+      <isyNodeType id="133" name="Scene Controller" />
+      <isyNodeType id="134" name="Scene Switch" />
+      <isyNodeType id="135" name="Security Panel" />
+      <isyNodeType id="136" name="Set-Top Box" />
+      <isyNodeType id="137" name="Siren" />
+      <isyNodeType id="138" name="Smoke Alarm" />
+      <isyNodeType id="139" name="Subsystem Controller" />
+      <isyNodeType id="140" name="Thermostat" />
+      <isyNodeType id="141" name="Toggle" />
+      <isyNodeType id="142" name="Television" />
+      <isyNodeType id="143" name="Energy Meter" />
+      <isyNodeType id="144" name="Pulse Meter" />
+      <isyNodeType id="145" name="Water Meter" />
+      <isyNodeType id="146" name="Gas Meter" />
+      <isyNodeType id="147" name="Binary Switch" />
+      <isyNodeType id="148" name="Binary Alarm" />
+      <isyNodeType id="149" name="Aux Alarm" />
+      <isyNodeType id="150" name="CO2 Alarm" />
+      <isyNodeType id="151" name="CO Alarm" />
+      <isyNodeType id="152" name="Freeze Alarm" />
+      <isyNodeType id="153" name="Glass Break Alarm" />
+      <isyNodeType id="154" name="Heat Alarm" />
+      <isyNodeType id="155" name="Motion Sensor" />
+      <isyNodeType id="156" name="Smoke Alarm" />
+      <isyNodeType id="157" name="Tamper Alarm" />
+      <isyNodeType id="158" name="Tilt Alarm" />
+      <isyNodeType id="159" name="Water Alarm" />
+      <isyNodeType id="160" name="Door/Window Alarm" />
+      <isyNodeType id="161" name="Test Alarm" />
+      <isyNodeType id="162" name="Low Battery Alarm" />
+      <isyNodeType id="163" name="CO End Of Life Alarm" />
+      <isyNodeType id="164" name="Malfunction Alarm" />
+      <isyNodeType id="165" name="Heartbeat" />
+      <isyNodeType id="166" name="Overheat Alarm" />
+      <isyNodeType id="167" name="Rapid Temp Rise Alarm" />
+      <isyNodeType id="168" name="Underheat Alarm" />
+      <isyNodeType id="169" name="Leak Detected Alarm" />
+      <isyNodeType id="170" name="Level Drop Alarm" />
+      <isyNodeType id="171" name="Replace Filter Alarm" />
+      <isyNodeType id="172" name="Intrusion Alarm" />
+      <isyNodeType id="173" name="Tamper Code Alarm" />
+      <isyNodeType id="174" name="Hardware Failure Alarm" />
+      <isyNodeType id="175" name="Software Failure Alarm" />
+      <isyNodeType id="176" name="Contact Police Alarm" />
+      <isyNodeType id="177" name="Contact Fire Alarm" />
+      <isyNodeType id="178" name="Contact Medical Alarm" />
+      <isyNodeType id="179" name="Wakeup Alarm" />
+      <isyNodeType id="180" name="Timer" />
+      <isyNodeType id="181" name="Power Management" />
+      <isyNodeType id="182" name="Appliance" />
+      <isyNodeType id="183" name="Home Health" />
+      <isyNodeType id="184" name="Barrier" />
+   </isyNodeTypes>
+
+   <isyDeviceModels>
+      <isyDeviceModel id="0" name="unknown" />
+      <isyDeviceModel id="1" name="Schlage BE369" />
+      <isyDeviceModel id="2" name="Schlage BE469" />
+      <isyDeviceModel id="3" name="Schlage FE599" />
+      <isyDeviceModel id="4" name="Kwikset door lock" />
+      <isyDeviceModel id="5" name="Yale door lock" />
+      <isyDeviceModel id="6" name="FortrezZ water valve" />
+      <isyDeviceModel id="7" name="First Alert smoke detector" />
+      <isyDeviceModel id="8" name="First Alert carbon monoxide and smoke detector" />
+      <isyDeviceModel id="9" name="Aeon multisensor" />
+      <isyDeviceModel id="10" name="RCS PMC40" />
+      <isyDeviceModel id="11" name="FortrezZ MIMOLite" />
+   </isyDeviceModels>
+
+</NodeFamily>
+
+
