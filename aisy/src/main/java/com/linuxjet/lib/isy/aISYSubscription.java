@@ -17,9 +17,11 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.StringReader;
 import java.net.HttpURLConnection;
@@ -40,7 +42,7 @@ import static com.linuxjet.lib.isy.util.XmlUtil.asList;
 public class aISYSubscription {
   private static String TAG = "aISYSubscription";
 
-  aISY aISY;
+  aISY aisy;
 
   private InputStream reader = null;
   private OutputStreamWriter writer = null;
@@ -48,49 +50,55 @@ public class aISYSubscription {
 
   private String auth;
   private HttpURLConnection request;
-  public Boolean hasSID;
-  public Boolean running;
-  public String SID;
+  private Boolean hasSID;
+
+  private Boolean running;
+  private String SID;
 
 
   public aISYSubscription(aISY j) {
-    aISY = j;
+    aisy = j;
     hasSID = false;
-    auth = "Basic " + Base64.encodeToString((aISY.getUserName() + ":" + aISY.getPassWord()).getBytes(), Base64.DEFAULT);
+    auth = "Basic " + Base64.encodeToString((aisy.getUserName() + ":" + aisy.getPassWord()).getBytes(), Base64.DEFAULT);
   }
-
 
   public void setListener(ISYEventListener l) {
     listener = l;
   }
 
   public Boolean hasListener() {
-    return (listener != null && listener instanceof ISYEventListener);
+    return (listener != null &&listener instanceof ISYEventListener);
   }
 
+  public void DisConnect() {
+    try {
+      doUnSubscribe();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
 
   public void Connect() {
 
     while (running) {
 
       //TEMP CHECK TO NOT HAVE TO RELOAD
-      if (aISY.getNodeList() == null ) {
-        ErrorNotify("Get Nodes Config");
-        try {
-          GetNodesConfig();
-        } catch (IOException e) {
-          e.printStackTrace();
-        }
-      }
-
-      setDebugging(aISY.getHostAddr(), auth);
+      //if (aisy.getNodeList() == null ) {
+      //  ErrorNotify("Get Nodes Config");
+      //  try {
+      //    GetNodesConfig();
+      //  } catch (IOException e) {
+      //    e.printStackTrace();
+      //  }
+      //}
+      setDebugging(aisy.getHostAddr(), auth);
 
       ErrorNotify("Subscribe Subscription.");
 
       try {
-        if (aISY.getNodeList() != null) {
+      //  if (aisy.getNodeList() != null) {
           doSubscribe(auth);
-        }
+      //  }
       } catch (IOException e) {
         e.printStackTrace();
       }
@@ -98,24 +106,71 @@ public class aISYSubscription {
       try {
         Thread.sleep(50000);
       } catch (InterruptedException e) {
-        e.printStackTrace();
+        Log.d(TAG, "Main Thread Subscription has stopped - this is probably expected");
       }
     }
 
   }
 
+  private void doUnSubscribe() throws IOException {
+
+      SSLSocket isySocketSSL;
+      Socket isySocket;
+
+      if (aisy.getSSLEnabled()) {
+        isySocketSSL = ConnectionManager.getSSLSocket(aisy);
+        writer = new OutputStreamWriter(isySocketSSL.getOutputStream());
+        reader = isySocketSSL.getInputStream();
+      } else {
+        isySocket = ConnectionManager.getSocket(aisy);
+        writer = new OutputStreamWriter(isySocket.getOutputStream());
+        reader = isySocket.getInputStream();
+      }
+
+      String subreq = "<s:Envelope><s:Body>" + "<u:Unsubscribe";
+      subreq += " xmlns:u='urn:udi-com:service:X_Insteon_Lighting_Service:1'>";
+      subreq += "<SID>"+SID+"</SID>";
+      subreq += "</u:Unsubscribe></s:Body></s:Envelope>";
+
+      try {
+        writer.write("POST /services HTTP/1.1\n");
+        writer.write("Content-Type: text/xml; charset=utf-8\n");
+        writer.write("Authorization: " + auth + "\n");
+        writer.write("Content-Length: " + (subreq.length()) + "\n");
+        writer.write("SOAPAction: urn:udi-com:device:X_Insteon_Lighting_Service:1#Unsubscribe\r\n");
+        writer.write("\r\n");
+        writer.write(subreq);
+        writer.write("\r\n");
+        writer.flush();
+      } catch (IOException e) {
+        e.printStackTrace();
+        return;
+      }
+
+    //BufferedReader bufreader = new BufferedReader(new InputStreamReader(reader));
+    //StringBuilder retVal = new StringBuilder();
+    //String tmpStr;
+    //while((tmpStr = bufreader.readLine()) != null) {
+    //  retVal.append(tmpStr);
+    //}
+
+    //Log.d(TAG,"UNSUBSCRIBE: " + retVal.toString());
+
+    hasSID = false;
+  }
+
 
   private void doSubscribe(String auth) throws IOException {
 
-    SSLSocket isySocketSSL = null;
-    Socket isySocket = null;
+    SSLSocket isySocketSSL;
+    Socket isySocket;
 
-    if (aISY.getSSLEnabled()) {
-      isySocketSSL = ConnectionManager.getSSLSocket(aISY);
+    if (aisy.getSSLEnabled()) {
+      isySocketSSL = ConnectionManager.getSSLSocket(aisy);
       writer = new OutputStreamWriter(isySocketSSL.getOutputStream());
       reader = isySocketSSL.getInputStream();
     } else {
-      isySocket = ConnectionManager.getSocket(aISY);
+      isySocket = ConnectionManager.getSocket(aisy);
       writer = new OutputStreamWriter(isySocket.getOutputStream());
       reader = isySocket.getInputStream();
     }
@@ -220,7 +275,7 @@ public class aISYSubscription {
 
     String Control = "";
     String Action = "";
-    Node Node = null;
+    String Node = null;
     String EventInfo = "";
     String sid = "";
     int seqid = -1;
@@ -244,7 +299,12 @@ public class aISYSubscription {
         for (org.w3c.dom.Node attr : asList(attributes)) {
           if (attr.getNodeName().toLowerCase().equals("sid")) {
             sid = attr.getNodeValue();
-            if (!sid.equals(SID)) hasSID = false;
+            if (!sid.equals(SID)) {
+              hasSID = false;
+              return;
+            } else {
+
+            }
           } else if (attr.getNodeName().equals("seqnum")) {
             seqid = Integer.parseInt(attr.getNodeValue());
           } else {
@@ -258,7 +318,7 @@ public class aISYSubscription {
           } else if (evt_info.getNodeName().equals("action")) {
             Action = evt_info.getTextContent();
           } else if (evt_info.getNodeName().equals("node")) {
-            Node = aISY.getNodeList().getNodeByAddress(evt_info.getTextContent());
+            Node = evt_info.getTextContent();
           } else if (evt_info.getNodeName().equals("eventInfo")) {
             EventInfo = evt_info.getTextContent();
           } else {
@@ -481,93 +541,6 @@ public class aISYSubscription {
     }
   }
 
-
-  private void GetNodesConfig() throws IOException {
-
-    Node new_node = null;
-    String result = aISY.getRequester().get("/nodes",null);
-    if (result == null) return;
-    XmlPullParser parser = null;
-    XmlPullParserFactory factory;
-    try {
-      factory = XmlPullParserFactory.newInstance();
-      parser = factory.newPullParser();
-    } catch (XmlPullParserException e) {
-      e.printStackTrace();
-    }
-    if (parser == null) {
-      ErrorNotify("GetNodesConfig: Failed to create parser");
-      return;
-    }
-    try {
-      parser.setInput(new StringReader(result));
-    } catch (XmlPullParserException e) {
-      e.printStackTrace();
-    }
-
-    try {
-      int eventType = parser.getEventType();
-
-      while (eventType != XmlPullParser.END_DOCUMENT) {
-        String name = null;
-        switch (eventType) {
-          case XmlPullParser.START_DOCUMENT:
-            aISY.setNodeList(new ISYNodeList());
-            break;
-          case XmlPullParser.START_TAG:
-            name = parser.getName();
-            if (name.equalsIgnoreCase("node") || name.equalsIgnoreCase("group")){
-              new_node = new Node();
-              new_node.setFlag(parser.getAttributeValue(null, "flag"));
-            } else if (new_node != null) {
-              if (name.equals("address")) {
-                new_node.setAddress(parser.nextText());
-              } else if (name.equals("name")) {
-                new_node.setName(parser.nextText());
-              } else if (name.equals("type")) {
-                new_node.setType(parser.nextText());
-              } else if (name.equalsIgnoreCase("elk_id")) {
-                new_node.setElkID(parser.nextText());
-              } else if (name.equalsIgnoreCase("devicegroup")) {
-                new_node.setGroup(parser.nextText());
-              } else if (name.equalsIgnoreCase("property")) {
-                ISYNodeProperty property = new ISYNodeProperty();
-                property.setId(parser.getAttributeValue(null,"id"));
-                try {
-                  property.setValue(Integer.parseInt(parser.getAttributeValue(null, "value")));
-                } catch (NumberFormatException e) {
-                  property.setValue(0);
-                }
-                property.setFormattedValue(parser.getAttributeValue(null,"formatted"));
-                property.setUOM(parser.getAttributeValue(null,"uom"));
-                new_node.addProperty(property);
-              } else if (name.equalsIgnoreCase("enabled")) {
-                new_node.setEnabled(Boolean.parseBoolean(parser.nextText()));
-              }
-            }
-            break;
-          case XmlPullParser.END_TAG:
-            name = parser.getName();
-            if (name.equalsIgnoreCase("node") || name.equalsIgnoreCase("group")) {
-              if (new_node != null) {
-                aISY.getNodeList().addNode(new_node);
-              }
-              new_node = null;
-            }
-            break;
-
-        }
-        eventType = parser.nextToken();
-
-      }
-    } catch (XmlPullParserException e) {
-      e.printStackTrace();
-    }
-  }
-
-
-
-
   private void setDebugging(String ip_address, String auth) {
     String reqxml;
 
@@ -578,7 +551,7 @@ public class aISYSubscription {
     reqxml += "</u:SetDebugLevel></s:Body></s:Envelope>" + ("\r\n");
 
     try {
-      request = ConnectionManager.openConnection(aISY);
+      request = ConnectionManager.openConnection(aisy);
       request.setRequestMethod("POST");
       request.setRequestProperty("Content-Type", "text/xml; charset=utf-8");
       request.setRequestProperty("Authorization", auth);
@@ -602,8 +575,8 @@ public class aISYSubscription {
   }
 
 
-  protected void NotifyAll(int seq, String control, String action, Node node, String text) {
-    Log.d(TAG, "SEQ: " + seq + " Control: " + control + " Action: " + action + " Node: " + (node != null ? node.getName() : "") + " Text: " + text);
+  protected void NotifyAll(int seq, String control, String action, String node, String text) {
+    Log.d(TAG, "SEQ: " + seq + " Control: " + control + " Action: " + action + " Node: " + node + " Text: " + text);
   }
 
   protected void ErrorNotify(String s) {
@@ -622,6 +595,14 @@ public class aISYSubscription {
       }
     }
     return contentLength;
+  }
+
+  public Boolean isRunning() {
+    return running;
+  }
+
+  public void setRunning(Boolean running) {
+    this.running = running;
   }
 
 }

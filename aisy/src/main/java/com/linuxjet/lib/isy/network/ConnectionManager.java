@@ -1,5 +1,7 @@
 package com.linuxjet.lib.isy.network;
 
+import android.util.Log;
+
 import com.linuxjet.lib.isy.aISY;
 import com.linuxjet.lib.isy.network.ssl.TrustAllSSLSocketFactory;
 
@@ -86,7 +88,7 @@ public class ConnectionManager {
   }
 
   public static Socket getSocket(aISY aISY) {
-    Socket isySocket = null;
+    Socket isySocket;
       try {
         if (aISY.getHostAddr().contains(":")) {
           String[] ip = aISY.getHostAddr().split(":");

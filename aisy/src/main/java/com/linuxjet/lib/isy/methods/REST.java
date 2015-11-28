@@ -2,6 +2,7 @@ package com.linuxjet.lib.isy.methods;
 
 import android.os.AsyncTask;
 import android.util.Base64;
+import android.util.Log;
 
 import com.linuxjet.lib.isy.aISY;
 import com.linuxjet.lib.isy.listeners.TaskListener;
@@ -16,6 +17,8 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -46,10 +49,12 @@ public class REST {
       return null;
     }
     try {
-      return task.execute(str,false).get();
+      return task.execute(str,false).get(5000,TimeUnit.MILLISECONDS);
     } catch (InterruptedException e) {
       e.printStackTrace();
     } catch (ExecutionException e) {
+      e.printStackTrace();
+    } catch (TimeoutException e) {
       e.printStackTrace();
     }
     return null;
@@ -62,10 +67,12 @@ public class REST {
       return null;
     }
     try {
-      return task.execute(str,true).get();
+      return task.execute(str,true).get(5000, TimeUnit.MILLISECONDS);
     } catch (InterruptedException e) {
       e.printStackTrace();
     } catch (ExecutionException e) {
+      e.printStackTrace();
+    } catch (TimeoutException e) {
       e.printStackTrace();
     }
     return null;
@@ -133,12 +140,12 @@ public class REST {
       request.setRequestProperty("Authorization", auth);
 
       if (request.getResponseCode() == HttpURLConnection.HTTP_OK) {
-        reader = new BufferedReader(new InputStreamReader(request.getInputStream()));
-        retVal = new StringBuilder();
-        String tmpStr;
-        while((tmpStr = reader.readLine()) != null) {
-          retVal.append(tmpStr);
-        }
+          reader = new BufferedReader(new InputStreamReader(request.getInputStream()));
+          retVal = new StringBuilder();
+          String tmpStr;
+          while((tmpStr = reader.readLine()) != null) {
+            retVal.append(tmpStr);
+          }
       }
       request.disconnect();
     } catch (Exception e) {

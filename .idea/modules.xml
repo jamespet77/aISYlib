@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/JISY.iml" filepath="$PROJECT_DIR$/JISY.iml" />
       <module fileurl="file://$PROJECT_DIR$/aISY.iml" filepath="$PROJECT_DIR$/aISY.iml" />
       <module fileurl="file://$PROJECT_DIR$/aisy/aisy.iml" filepath="$PROJECT_DIR$/aisy/aisy.iml" />
     </modules>

@@ -7,34 +7,34 @@ import java.util.Vector;
 /**
  * Created by jamespet on 10/19/15.
  */
-public class ISYNodeList {
-  private Vector<Node> data;
+public class ISYNodeList extends Vector<Node> {
 
   public ISYNodeList() {
-    data = new Vector<>();
   }
 
   public Node getNodeByAddress(String addr) {
-    for(Node node : data) {
-      if (node.getAddress().equalsIgnoreCase(addr));
+    for(Node node : subList(0,elementCount)) {
+      if (node.getAddress().equalsIgnoreCase(addr)) {
+        return node;
+      }
     }
     return null;
   }
 
   public Node getNodeByIndex(int idx) {
-    if (idx < data.size()) return data.get(idx);
+    if (idx < elementCount) return elementAt(idx);
     return null;
   }
 
-  public void addNode(Node node) {
-    data.add(node);
-  }
+  //public void addNode(Node node) {
+  //  data.add(node);
+  //}
 
-  public void clear() {
-    data.clear();
-  }
+  //public void clear() {
+  //  data.clear();
+  //}
 
-  public int size() {
-    return data.size();
-  }
+  //public int size() {
+  //  return data.size();
+  //}
 }

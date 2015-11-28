@@ -1,5 +1,7 @@
 package com.linuxjet.lib.isy.network.ssl;
 
+import android.util.Log;
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
@@ -21,11 +23,11 @@ public class TrustAllSSLSocketFactory extends SSLSocketFactory {
       super();
 
       try {
-         SSLContext var1 = SSLContext.getInstance("TLS");
-         var1.init((KeyManager[])null, new TrustManager[]{new TrustAllManager()}, (SecureRandom)null);
-         this.factory = var1.getSocketFactory();
-      } catch (Exception var2) {
-         ;
+         SSLContext ctx = SSLContext.getInstance("TLS");
+         ctx.init((KeyManager[])null, new TrustManager[]{new TrustAllManager()}, (SecureRandom)null);
+         this.factory = ctx.getSocketFactory();
+      } catch (Exception exp) {
+         Log.d("SSLSocketFactory","failed to create SSL Context");
       }
    }
 

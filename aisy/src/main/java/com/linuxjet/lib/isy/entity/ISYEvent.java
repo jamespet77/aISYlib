@@ -9,7 +9,7 @@ public class ISYEvent {
 
   public String Control;
   public String Action;
-  public com.linuxjet.lib.isy.entity.base.Node Node;
+  public String Node;
   public String EventInfo;
   public String TimeStamp;
   public int Sequence;
@@ -17,13 +17,13 @@ public class ISYEvent {
   public ISYEvent() {
     Control = "";
     Action  = "";
-    Node    = null;
+    Node    = "";
     EventInfo = "";
     TimeStamp = new Date().toString();
     Sequence = 0;
   }
 
-  public ISYEvent(int s, String c, String a, com.linuxjet.lib.isy.entity.base.Node n, String e) {
+  public ISYEvent(int s, String c, String a, String n, String e) {
     Sequence = s;
     Control = c;
     Action = a;

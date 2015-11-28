@@ -7,7 +7,7 @@ import java.util.Vector;
 /**
  * Created by jamespet on 10/15/15.
  */
-public class Node {
+public class Node implements Comparable<Node> {
 
   private String Name;
   private String Address;
@@ -20,6 +20,17 @@ public class Node {
 
   public Node() {
     properties = new Vector<>();
+  }
+
+  public Node(Node node) {
+    setName(node.getName());
+    setAddress(node.getAddress());
+    setElkID(node.getElkID());
+    setEnabled(node.getEnabled());
+    setFlag(node.getFlag());
+    setGroup(node.getGroup());
+    setType(node.getType());
+    setProperties(node.getProperties());
   }
 
   public String getAddress() {
@@ -78,6 +89,11 @@ public class Node {
     Enabled = enabled;
   }
 
+  public Boolean isDimmable() {
+    if (getType() != null && getType().startsWith("1.")) return true;
+    return false;
+  }
+
   public void addProperty(ISYNodeProperty property) {
     properties.add(property);
   }
@@ -100,9 +116,24 @@ public class Node {
     return properties;
   }
 
+  public void setProperties(Vector<ISYNodeProperty> nodeProperties) {
+    properties = nodeProperties;
+  }
+
 
   @Override
   public String toString() {
     return "Name:" + getName() + " | Addr:" + getAddress() + " | Type: " + getType() + " | Group:" + getGroup() + " | Flag:" + getFlag() + " | ElkID:" + getElkID();
+  }
+
+  @Override
+  public int compareTo(Node another) {
+    if (getType() == null) return 1;
+    if (another.getType() == null) return -1;
+    if (getType().substring(0,getType().indexOf(".") + 1).compareTo(another.getType().substring(0,another.getType().indexOf(".") + 1)) == 0) {
+      return getName().compareTo(another.getName());
+    }
+    return getType().compareTo(another.getType());
+
   }
 }

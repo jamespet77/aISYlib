@@ -6,31 +6,31 @@ import com.linuxjet.lib.isy.entity.ISYEvent;
  * Created by jamespet on 10/18/15.
  */
 public interface ISYEventListener {
-  public void onHeartbeat(ISYEvent event);
-  public void onTriggerEvent(ISYEvent event);
-  public void onDriverEvent(ISYEvent event);
-  public void onNodeUpdate(ISYEvent event);
-  public void onSystemConfigUpdate(ISYEvent event);
-  public void onSystemStatusUpdate(ISYEvent event);
-  public void onInternetStatusUpdate(ISYEvent event);
-  public void onProgressUpdate(ISYEvent event);
-  public void onSecurtyEvent(ISYEvent event);
-  public void onAlertEvent(ISYEvent event);
-  public void onADRFLEXEvent(ISYEvent event);
-  public void onClimateEvent(ISYEvent event);
-  public void onAMISEPEvent(ISYEvent event);
-  public void onExternalEnergyEvent(ISYEvent event);
-  public void onUPBLinkerEvent(ISYEvent event);
-  public void onUPBAdderEvent(ISYEvent event);
-  public void onUPBStatusEvent(ISYEvent event);
-  public void onGasMeterEvent(ISYEvent event);
-  public void onZigbeeEvent(ISYEvent event);
-  public void onELKEvent(ISYEvent event);
-  public void onDeviceLinkerEvent(ISYEvent event);
-  public void onZWaveEvent(ISYEvent event);
-  public void onBillingEvent(ISYEvent event);
-  public void onPortalEvent(ISYEvent event);
-  public void onStatusUpdate(ISYEvent event);
-  public void onDefault(ISYEvent event);
+  void onHeartbeat(ISYEvent event);
+  void onTriggerEvent(ISYEvent event);
+  void onDriverEvent(ISYEvent event);
+  void onNodeUpdate(ISYEvent event);
+  void onSystemConfigUpdate(ISYEvent event);
+  void onSystemStatusUpdate(ISYEvent event);
+  void onInternetStatusUpdate(ISYEvent event);
+  void onProgressUpdate(ISYEvent event);
+  void onSecurtyEvent(ISYEvent event);
+  void onAlertEvent(ISYEvent event);
+  void onADRFLEXEvent(ISYEvent event);
+  void onClimateEvent(ISYEvent event);
+  void onAMISEPEvent(ISYEvent event);
+  void onExternalEnergyEvent(ISYEvent event);
+  void onUPBLinkerEvent(ISYEvent event);
+  void onUPBAdderEvent(ISYEvent event);
+  void onUPBStatusEvent(ISYEvent event);
+  void onGasMeterEvent(ISYEvent event);
+  void onZigbeeEvent(ISYEvent event);
+  void onELKEvent(ISYEvent event);
+  void onDeviceLinkerEvent(ISYEvent event);
+  void onZWaveEvent(ISYEvent event);
+  void onBillingEvent(ISYEvent event);
+  void onPortalEvent(ISYEvent event);
+  void onStatusUpdate(ISYEvent event);
+  void onDefault(ISYEvent event);
 
 }

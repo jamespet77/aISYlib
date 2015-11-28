@@ -5,7 +5,7 @@ package com.linuxjet.lib.isy.entity;
  */
 public class ISYNodeProperty {
   private String Id;
-  private int value;
+  private int value = 0;
   private String formatted;
   private String UOM;
 
