@@ -1,7 +1,5 @@
 package com.linuxjet.lib.isy.network;
 
-import android.util.Log;
-
 import com.linuxjet.lib.isy.aISY;
 import com.linuxjet.lib.isy.network.ssl.TrustAllSSLSocketFactory;
 

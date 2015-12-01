@@ -6,24 +6,15 @@ import android.util.Log;
 import com.linuxjet.lib.isy.entity.ISYEvent;
 import com.linuxjet.lib.isy.listeners.ISYEventListener;
 import com.linuxjet.lib.isy.network.ConnectionManager;
-import com.linuxjet.lib.isy.entity.base.Node;
-import com.linuxjet.lib.isy.entity.ISYNodeList;
-import com.linuxjet.lib.isy.entity.ISYNodeProperty;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.NodeList;
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-import org.xmlpull.v1.XmlPullParserFactory;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.io.StringReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
@@ -525,7 +516,7 @@ public class aISYSubscription {
             if (listener != null) {
               listener.onStatusUpdate(new ISYEvent(seqid, Control, Action, Node, EventInfo));
             } else {
-              NotifyAll(seqid, "", Action, Node, "");
+              NotifyAll(seqid, Control, Action, Node, EventInfo);
             }
             break;
           default:

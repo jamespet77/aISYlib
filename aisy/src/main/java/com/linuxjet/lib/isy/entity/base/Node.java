@@ -10,11 +10,12 @@ import java.util.Vector;
 public class Node implements Comparable<Node> {
 
   private String Name;
+  private String CustomName;
   private String Address;
   private String Type;
   private String ElkID;
-  private String Group;
   private String Flag;
+  private String Folder;
   private Boolean Enabled = false;
   private Vector<ISYNodeProperty> properties;
 
@@ -28,7 +29,6 @@ public class Node implements Comparable<Node> {
     setElkID(node.getElkID());
     setEnabled(node.getEnabled());
     setFlag(node.getFlag());
-    setGroup(node.getGroup());
     setType(node.getType());
     setProperties(node.getProperties());
   }
@@ -57,12 +57,12 @@ public class Node implements Comparable<Node> {
     Flag = flag;
   }
 
-  public String getGroup() {
-    return Group;
+  public void setFolder(String folder) {
+    Folder = folder;
   }
 
-  public void setGroup(String group) {
-    Group = group;
+  public String getFolder() {
+    return Folder;
   }
 
   public String getName() {
@@ -73,8 +73,17 @@ public class Node implements Comparable<Node> {
     Name = name;
   }
 
+  public String getCustomName() {
+    return CustomName;
+  }
+
+  public void setCustomName(String name) {
+    CustomName = name;
+  }
   public String getType() {
-    return Type;
+    if (Type != null)
+      return Type;
+    return "";
   }
 
   public void setType(String type) {
@@ -99,7 +108,7 @@ public class Node implements Comparable<Node> {
   }
 
   public ISYNodeProperty getProperty(String id) {
-    if (properties.size() > 0) {
+    if (properties != null && properties.size() > 0) {
       for(ISYNodeProperty p : properties) {
         if (p.getId().equals(id)) return p;
       }
@@ -120,16 +129,15 @@ public class Node implements Comparable<Node> {
     properties = nodeProperties;
   }
 
-
   @Override
   public String toString() {
-    return "Name:" + getName() + " | Addr:" + getAddress() + " | Type: " + getType() + " | Group:" + getGroup() + " | Flag:" + getFlag() + " | ElkID:" + getElkID();
+    return "Name:" + getName() + " | Addr:" + getAddress() + " | Type: " + getType() + " | Flag:" + getFlag() + " | ElkID:" + getElkID();
   }
 
   @Override
   public int compareTo(Node another) {
-    if (getType() == null) return 1;
-    if (another.getType() == null) return -1;
+    if (getType() == null || getType().equals("")) return 1;
+    if (another.getType() == null || another.getType().equals("")) return -1;
     if (getType().substring(0,getType().indexOf(".") + 1).compareTo(another.getType().substring(0,another.getType().indexOf(".") + 1)) == 0) {
       return getName().compareTo(another.getName());
     }

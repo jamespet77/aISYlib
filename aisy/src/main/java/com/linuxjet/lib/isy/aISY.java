@@ -2,11 +2,8 @@ package com.linuxjet.lib.isy;
 
 import com.linuxjet.lib.isy.listeners.TaskListener;
 import com.linuxjet.lib.isy.network.ssl.NullHostNameVerifier;
-import com.linuxjet.lib.isy.entity.ISYNodeList;
 
 import javax.net.ssl.HttpsURLConnection;
-
-import static com.linuxjet.lib.isy.util.XmlUtil.asList;
 
 /**
  * Created by jamespet on 10/15/15.
