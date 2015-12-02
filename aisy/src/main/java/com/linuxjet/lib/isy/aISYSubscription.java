@@ -21,6 +21,7 @@ import java.net.ProtocolException;
 import java.net.Socket;
 import java.util.StringTokenizer;
 
+import javax.net.ssl.SSLException;
 import javax.net.ssl.SSLSocket;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -191,36 +192,41 @@ public class aISYSubscription {
     StringBuffer headerBuffer = new StringBuffer();
     int charValue;
     do { //Do once and then check for SID - REPEAT IF SID FOUND
-      while ((charValue = reader.read()) != -1) { //CONTINUE READING TILL END OF INPUT
-        headerBuffer.append((char) charValue);
-        if (charValue == '\n') {
-          int index = headerBuffer.length();
-          if (index >= 4) { //Check for end of header data
-            if (headerBuffer.charAt(index - 2) == '\r' &&
-                headerBuffer.charAt(index - 3) == '\n' && headerBuffer.charAt(index - 4) == '\r') {
-              content_length = getContentLength(headerBuffer.toString());
+      try {
+        while ((charValue = reader.read()) != -1) { //CONTINUE READING TILL END OF INPUT
+          headerBuffer.append((char) charValue);
+          if (charValue == '\n') {
+            int index = headerBuffer.length();
+            if (index >= 4) { //Check for end of header data
+              if (headerBuffer.charAt(index - 2) == '\r' &&
+                  headerBuffer.charAt(index - 3) == '\n' && headerBuffer.charAt(index - 4) == '\r') {
+                content_length = getContentLength(headerBuffer.toString());
 
-              if (content_length < 0)
-                break;
-              byte messageBuffer[] = new byte[content_length];
-              int num_read = 0;
-              do {
-                int r = reader.read(messageBuffer, num_read, content_length - num_read);
-                if (r == -1)
+                if (content_length < 0)
                   break;
-                num_read += r;
-              } while (num_read < content_length);
-              //View received XML
-              //Log.d(TAG, new String(ca));
-              if (hasSID) {
-                ParseEvent(new ByteArrayInputStream(messageBuffer));
-              } else {
-                Subscribe(new ByteArrayInputStream(messageBuffer));
+                byte messageBuffer[] = new byte[content_length];
+                int num_read = 0;
+                do {
+                  int r = reader.read(messageBuffer, num_read, content_length - num_read);
+                  if (r == -1)
+                    break;
+                  num_read += r;
+                } while (num_read < content_length);
+                //View received XML
+                //Log.d(TAG, new String(ca));
+                if (hasSID) {
+                  ParseEvent(new ByteArrayInputStream(messageBuffer));
+                } else {
+                  Subscribe(new ByteArrayInputStream(messageBuffer));
+                }
+                break;
               }
-              break;
             }
           }
         }
+      } catch (SSLException e) {
+        Log.d(TAG,"Network Connection Lost");
+        hasSID = false;
       }
       headerBuffer.setLength(0);
     } while (hasSID);

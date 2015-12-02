@@ -58,6 +58,11 @@ public class aISY {
       public void onFinished(String result) {
         sub_thread.interrupt();
       }
+
+      @Override
+      public void onFinished(Boolean result) {
+
+      }
     })).start();
   }
 
@@ -72,7 +77,7 @@ public class aISY {
     public void run() {
       aISYSubscription.DisConnect();
       if (listener != null) {
-        listener.onFinished(null);
+        listener.onFinished("");
       }
     }
   }
