@@ -19,6 +19,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.StringTokenizer;
 
 import javax.net.ssl.SSLException;
@@ -224,6 +225,9 @@ public class aISYSubscription {
             }
           }
         }
+      } catch (SocketException e) {
+        Log.d(TAG,"Network Connection Lost");
+        hasSID = false;
       } catch (SSLException e) {
         Log.d(TAG,"Network Connection Lost");
         hasSID = false;

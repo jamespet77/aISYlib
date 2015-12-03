@@ -65,17 +65,13 @@
       <sourceFolder url="file://$MODULE_DIR$/../../aISY/aisy/src/androidTest/java" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/../../aISY/aisy/src/androidTest/jni" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/../../aISY/aisy/src/androidTest/rs" isTestSource="true" />
-      <excludeFolder url="file://$MODULE_DIR$/../../aISY/aisy/build/intermediates/assets" />
-      <excludeFolder url="file://$MODULE_DIR$/../../aISY/aisy/build/intermediates/blame" />
       <excludeFolder url="file://$MODULE_DIR$/../../aISY/aisy/build/intermediates/bundles" />
       <excludeFolder url="file://$MODULE_DIR$/../../aISY/aisy/build/intermediates/classes" />
       <excludeFolder url="file://$MODULE_DIR$/../../aISY/aisy/build/intermediates/dependency-cache" />
       <excludeFolder url="file://$MODULE_DIR$/../../aISY/aisy/build/intermediates/incremental" />
       <excludeFolder url="file://$MODULE_DIR$/../../aISY/aisy/build/intermediates/jniLibs" />
       <excludeFolder url="file://$MODULE_DIR$/../../aISY/aisy/build/intermediates/lint" />
-      <excludeFolder url="file://$MODULE_DIR$/../../aISY/aisy/build/intermediates/res" />
       <excludeFolder url="file://$MODULE_DIR$/../../aISY/aisy/build/intermediates/rs" />
-      <excludeFolder url="file://$MODULE_DIR$/../../aISY/aisy/build/intermediates/symbols" />
       <excludeFolder url="file://$MODULE_DIR$/../../aISY/aisy/build/intermediates/transforms" />
       <excludeFolder url="file://$MODULE_DIR$/../../aISY/aisy/build/outputs" />
       <excludeFolder url="file://$MODULE_DIR$/../../aISY/aisy/build/tmp" />
