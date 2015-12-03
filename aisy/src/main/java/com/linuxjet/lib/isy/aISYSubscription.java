@@ -59,6 +59,10 @@ public class aISYSubscription {
     listener = l;
   }
 
+  public ISYEventListener getListener() {
+    return listener;
+  }
+
   public Boolean hasListener() {
     return (listener != null &&listener instanceof ISYEventListener);
   }
