@@ -5,6 +5,6 @@ package com.linuxjet.lib.isy.listeners;
  */
 public interface TaskListener {
   void onFinished(String result);
-  void onFinished(Boolean result);
+  //void onFinished(Boolean result);
 
 }

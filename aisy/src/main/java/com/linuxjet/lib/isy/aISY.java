@@ -59,10 +59,6 @@ public class aISY {
         sub_thread.interrupt();
       }
 
-      @Override
-      public void onFinished(Boolean result) {
-
-      }
     })).start();
   }
 

@@ -12,7 +12,7 @@ public class NullHostNameVerifier implements HostnameVerifier {
 
   @Override
   public boolean verify(String hostname, SSLSession session) {
-    Log.i("RestUtilImpl", "Approving certificate for " + hostname);
+    //Log.i("RestUtilImpl", "Approving certificate for " + hostname);
     return true;
   }
 
