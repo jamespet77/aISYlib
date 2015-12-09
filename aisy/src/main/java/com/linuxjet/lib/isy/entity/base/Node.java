@@ -110,7 +110,7 @@ public class Node implements Comparable<Node> {
   public ISYNodeProperty getProperty(String id) {
     if (properties != null && properties.size() > 0) {
       for(ISYNodeProperty p : properties) {
-        if (p.getId().equals(id)) return p;
+        if (p != null && p.getId() != null  && p.getId().equals(id)) return p;
       }
     }
     return null;
