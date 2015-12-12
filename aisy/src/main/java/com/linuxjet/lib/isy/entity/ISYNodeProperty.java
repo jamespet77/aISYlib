@@ -13,7 +13,7 @@ public class ISYNodeProperty {
     return formatted;
   }
 
-  private void setFormattedValue(String formatted) {
+  public void setFormattedValue(String formatted) {
     this.formatted = formatted;
   }
 
@@ -39,7 +39,6 @@ public class ISYNodeProperty {
 
   public void setValue(int value) {
     this.value = value;
-    setFormattedValue("" + (value * 100 / 255) + "%") ;
   }
 
   @Override

@@ -15,6 +15,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
+import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
@@ -26,6 +27,11 @@ import javax.net.ssl.SSLException;
 import javax.net.ssl.SSLSocket;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import static com.linuxjet.lib.isy.util.XmlUtil.asList;
 
@@ -282,6 +288,7 @@ public class aISYSubscription {
     String Action = "";
     String Node = null;
     String EventInfo = "";
+    String FormatAct = "";
     String sid = "";
     int seqid = -1;
 
@@ -299,7 +306,6 @@ public class aISYSubscription {
       xml_list = xmld.getChildNodes();
 
       for (org.w3c.dom.Node isy_event : asList(xml_list)) {
-
         attributes = isy_event.getAttributes();
         for (org.w3c.dom.Node attr : asList(attributes)) {
           if (attr.getNodeName().toLowerCase().equals("sid")) {
@@ -317,15 +323,24 @@ public class aISYSubscription {
           }
         }
 
-        for (org.w3c.dom.Node evt_info : asList(isy_event.getChildNodes())) {
-          if (evt_info.getNodeName().equals("control")) {
-            Control = evt_info.getTextContent();
-          } else if (evt_info.getNodeName().equals("action")) {
-            Action = evt_info.getTextContent();
-          } else if (evt_info.getNodeName().equals("node")) {
-            Node = evt_info.getTextContent();
-          } else if (evt_info.getNodeName().equals("eventInfo")) {
-            EventInfo = evt_info.getTextContent();
+        for (org.w3c.dom.Node event_node : asList(isy_event.getChildNodes())) {
+          if (event_node.getNodeName().equals("control")) {
+            Control = event_node.getTextContent();
+          } else if (event_node.getNodeName().equals("action")) {
+            Action = event_node.getTextContent();
+          } else if (event_node.getNodeName().equals("node")) {
+            Node = event_node.getTextContent();
+          } else if (event_node.getNodeName().equals("eventInfo")) {
+            for (org.w3c.dom.Node info : asList(event_node.getChildNodes())) {
+              if (info.getNodeName().equals("status")) {
+                EventInfo = info.getTextContent();
+              } else if (info.getNodeName().equals("value") || info.getNodeName().equals("unit")) {
+                if (!EventInfo.equals(info.getTextContent()))
+                  EventInfo += info.getTextContent();
+              }
+            }
+          } else if (event_node.getNodeName().equals("fmtAct")) {
+            FormatAct = event_node.getTextContent();
           } else {
             //Unknown data
           }
@@ -334,14 +349,14 @@ public class aISYSubscription {
         switch (Control) {
           case "_0":
             if (listener != null) {
-              listener.onHeartbeat(new ISYEvent(seqid, Control, Action, Node, EventInfo));
+              listener.onHeartbeat(new ISYEvent(seqid, Control, Action, Node, EventInfo, FormatAct));
             } else {
               NotifyAll(seqid, "Heartbeat", Action, Node, EventInfo);
             }
             break;
           case "_1":
             if (listener != null) {
-              listener.onTriggerEvent(new ISYEvent(seqid, Control, Action, Node, EventInfo));
+              listener.onTriggerEvent(new ISYEvent(seqid, Control, Action, Node, EventInfo, FormatAct));
             } else {
               switch (Action) {
                 case "0":
@@ -365,28 +380,28 @@ public class aISYSubscription {
             break;
           case "_2":
             if (listener != null) {
-              listener.onDriverEvent(new ISYEvent(seqid, Control, Action, Node, EventInfo));
+              listener.onDriverEvent(new ISYEvent(seqid, Control, Action, Node, EventInfo, FormatAct));
             } else {
               NotifyAll(seqid, "Protocol", Action, Node, EventInfo);
             }
             break;
           case "_3":
             if (listener != null) {
-              listener.onNodeUpdate(new ISYEvent(seqid, Control, Action, Node, EventInfo));
+              listener.onNodeUpdate(new ISYEvent(seqid, Control, Action, Node, EventInfo, FormatAct));
             } else {
               NotifyAll(seqid, "Nodes Update", Action, Node, EventInfo);
             }
             break;
           case "_4":
             if (listener != null) {
-              listener.onSystemConfigUpdate(new ISYEvent(seqid, Control, Action, Node, EventInfo));
+              listener.onSystemConfigUpdate(new ISYEvent(seqid, Control, Action, Node, EventInfo, FormatAct));
             } else {
               NotifyAll(seqid, "System Config", Action, Node, EventInfo);
             }
             break;
           case "_5":
             if (listener != null) {
-              listener.onSystemStatusUpdate(new ISYEvent(seqid, Control, Action, Node, EventInfo));
+              listener.onSystemStatusUpdate(new ISYEvent(seqid, Control, Action, Node, EventInfo, FormatAct));
             } else {
               switch (Action) {
                 case "1":
@@ -402,140 +417,140 @@ public class aISYSubscription {
             break;
           case "_6":
             if (listener != null) {
-              listener.onInternetStatusUpdate(new ISYEvent(seqid, Control, Action, Node, EventInfo));
+              listener.onInternetStatusUpdate(new ISYEvent(seqid, Control, Action, Node, EventInfo, FormatAct));
             } else {
               NotifyAll(seqid, "Internet", Action, Node, EventInfo);
             }
             break;
           case "_7":
             if (listener != null) {
-              listener.onProgressUpdate(new ISYEvent(seqid, Control, Action, Node, EventInfo));
+              listener.onProgressUpdate(new ISYEvent(seqid, Control, Action, Node, EventInfo, FormatAct));
             } else {
               NotifyAll(seqid, "Progress", Action, Node, EventInfo);
             }
             break;
           case "_8":
             if (listener != null) {
-              listener.onSecurtyEvent(new ISYEvent(seqid, Control, Action, Node, EventInfo));
+              listener.onSecurtyEvent(new ISYEvent(seqid, Control, Action, Node, EventInfo, FormatAct));
             } else {
               NotifyAll(seqid, "Security", Action, Node, EventInfo);
             }
             break;
           case "_9":
             if (listener != null) {
-              listener.onAlertEvent(new ISYEvent(seqid, Control, Action, Node, EventInfo));
+              listener.onAlertEvent(new ISYEvent(seqid, Control, Action, Node, EventInfo, FormatAct));
             } else {
               NotifyAll(seqid, "Alert", Action, Node, EventInfo);
             }
             break;
           case "_10":
             if (listener != null) {
-              listener.onADRFLEXEvent(new ISYEvent(seqid, Control, Action, Node, EventInfo));
+              listener.onADRFLEXEvent(new ISYEvent(seqid, Control, Action, Node, EventInfo, FormatAct));
             } else {
               NotifyAll(seqid, "Electricity", Action, Node, EventInfo);
             }
             break;
           case "_11":
             if (listener != null) {
-              listener.onClimateEvent(new ISYEvent(seqid, Control, Action, Node, EventInfo));
+              listener.onClimateEvent(new ISYEvent(seqid, Control, Action, Node, EventInfo, FormatAct));
             } else {
               NotifyAll(seqid, "Climate", Action, Node, EventInfo);
             }
             break;
           case "_12":
             if (listener != null) {
-              listener.onAMISEPEvent(new ISYEvent(seqid, Control, Action, Node, EventInfo));
+              listener.onAMISEPEvent(new ISYEvent(seqid, Control, Action, Node, EventInfo, FormatAct));
             } else {
               NotifyAll(seqid, "AMI/SEP", Action, Node, EventInfo);
             }
             break;
           case "_13":
             if (listener != null) {
-              listener.onExternalEnergyEvent(new ISYEvent(seqid, Control, Action, Node, EventInfo));
+              listener.onExternalEnergyEvent(new ISYEvent(seqid, Control, Action, Node, EventInfo, FormatAct));
             } else {
               NotifyAll(seqid, "External Energy Monitor", Action, Node, EventInfo);
             }
             break;
           case "_14":
             if (listener != null) {
-              listener.onUPBLinkerEvent(new ISYEvent(seqid, Control, Action, Node, EventInfo));
+              listener.onUPBLinkerEvent(new ISYEvent(seqid, Control, Action, Node, EventInfo, FormatAct));
             } else {
               NotifyAll(seqid, "UPB Linker", Action, Node, EventInfo);
             }
             break;
           case "_15":
             if (listener != null) {
-              listener.onUPBAdderEvent(new ISYEvent(seqid, Control, Action, Node, EventInfo));
+              listener.onUPBAdderEvent(new ISYEvent(seqid, Control, Action, Node, EventInfo, FormatAct));
             } else {
               NotifyAll(seqid, "UPB Adder", Action, Node, EventInfo);
             }
             break;
           case "_16":
             if (listener != null) {
-              listener.onUPBStatusEvent(new ISYEvent(seqid, Control, Action, Node, EventInfo));
+              listener.onUPBStatusEvent(new ISYEvent(seqid, Control, Action, Node, EventInfo, FormatAct));
             } else {
               NotifyAll(seqid, "UPB Status", Action, Node, EventInfo);
             }
             break;
           case "_17":
             if (listener != null) {
-              listener.onGasMeterEvent(new ISYEvent(seqid, Control, Action, Node, EventInfo));
+              listener.onGasMeterEvent(new ISYEvent(seqid, Control, Action, Node, EventInfo, FormatAct));
             } else {
               NotifyAll(seqid, "Gas Meter", Action, Node, EventInfo);
             }
             break;
           case "_18":
             if (listener != null) {
-              listener.onZigbeeEvent(new ISYEvent(seqid, Control, Action, Node, EventInfo));
+              listener.onZigbeeEvent(new ISYEvent(seqid, Control, Action, Node, EventInfo, FormatAct));
             } else {
               NotifyAll(seqid, "Zigbee", Action, Node, EventInfo);
             }
             break;
           case "_19":
             if (listener != null) {
-              listener.onELKEvent(new ISYEvent(seqid, Control, Action, Node, EventInfo));
+              listener.onELKEvent(new ISYEvent(seqid, Control, Action, Node, EventInfo, FormatAct));
             } else {
               NotifyAll(seqid, "ELK", Action, Node, EventInfo);
             }
             break;
           case "_20":
             if (listener != null) {
-              listener.onDeviceLinkerEvent(new ISYEvent(seqid, Control, Action, Node, EventInfo));
+              listener.onDeviceLinkerEvent(new ISYEvent(seqid, Control, Action, Node, EventInfo, FormatAct));
             } else {
               NotifyAll(seqid, "Device Linker", Action, Node, EventInfo);
             }
             break;
           case "_21":
             if (listener != null) {
-              listener.onZWaveEvent(new ISYEvent(seqid, Control, Action, Node, EventInfo));
+              listener.onZWaveEvent(new ISYEvent(seqid, Control, Action, Node, EventInfo, FormatAct));
             } else {
               NotifyAll(seqid, "Z-Wave", Action, Node, EventInfo);
             }
             break;
           case "_22":
             if (listener != null) {
-              listener.onBillingEvent(new ISYEvent(seqid, Control, Action, Node, EventInfo));
+              listener.onBillingEvent(new ISYEvent(seqid, Control, Action, Node, EventInfo, FormatAct));
             } else {
               NotifyAll(seqid, "Billing", Action, Node, EventInfo);
             }
             break;
           case "_23":
             if (listener != null) {
-              listener.onPortalEvent(new ISYEvent(seqid, Control, Action, Node, EventInfo));
+              listener.onPortalEvent(new ISYEvent(seqid, Control, Action, Node, EventInfo, FormatAct));
             } else {
               NotifyAll(seqid, "Portal", Action, Node, EventInfo);
             }
             break;
           case "ST":
             if (listener != null) {
-              listener.onStatusUpdate(new ISYEvent(seqid, Control, Action, Node, EventInfo));
+              listener.onStatusUpdate(new ISYEvent(seqid, Control, Action, Node, EventInfo, FormatAct));
             } else {
               NotifyAll(seqid, Control, Action, Node, EventInfo);
             }
             break;
           default:
             if (listener != null) {
-              listener.onDefault(new ISYEvent(seqid, Control, Action, Node, EventInfo));
+              listener.onDefault(new ISYEvent(seqid, Control, Action, Node, EventInfo, FormatAct));
             } else {
               NotifyAll(seqid, Control, Action, Node, EventInfo);
             }
@@ -608,6 +623,25 @@ public class aISYSubscription {
 
   public void setRunning(Boolean running) {
     this.running = running;
+  }
+
+  public String getStringFromDocument(Document doc)
+  {
+    try
+    {
+      DOMSource domSource = new DOMSource(doc);
+      StringWriter writer = new StringWriter();
+      StreamResult result = new StreamResult(writer);
+      TransformerFactory tf = TransformerFactory.newInstance();
+      Transformer transformer = tf.newTransformer();
+      transformer.transform(domSource, result);
+      return writer.toString();
+    }
+    catch(TransformerException ex)
+    {
+      ex.printStackTrace();
+      return null;
+    }
   }
 
 }

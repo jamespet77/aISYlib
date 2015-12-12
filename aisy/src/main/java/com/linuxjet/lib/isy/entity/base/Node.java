@@ -16,6 +16,7 @@ public class Node implements Comparable<Node> {
   private String ElkID;
   private String Flag;
   private String Folder;
+  private String Primary;
   private Boolean Enabled = false;
   private Vector<ISYNodeProperty> properties;
 
@@ -26,10 +27,12 @@ public class Node implements Comparable<Node> {
   public Node(Node node) {
     setName(node.getName());
     setAddress(node.getAddress());
+    setType(node.getType());
     setElkID(node.getElkID());
     setEnabled(node.getEnabled());
     setFlag(node.getFlag());
-    setType(node.getType());
+    setFolder(node.getFolder());
+    setPrimary(node.getPrimary());
     setProperties(node.getProperties());
   }
 
@@ -80,6 +83,7 @@ public class Node implements Comparable<Node> {
   public void setCustomName(String name) {
     CustomName = name;
   }
+
   public String getType() {
     if (Type != null)
       return Type;
@@ -88,6 +92,14 @@ public class Node implements Comparable<Node> {
 
   public void setType(String type) {
     Type = type;
+  }
+
+  public String getPrimary() {
+    return Primary;
+  }
+
+  public void setPrimary(String pri) {
+    Primary = pri;
   }
 
   public Boolean getEnabled() {
