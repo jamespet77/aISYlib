@@ -47,6 +47,7 @@ public class aISY {
 
       sub_thread = new Thread(new RunConnect());
       sub_thread.start();
+
     }
 
   }

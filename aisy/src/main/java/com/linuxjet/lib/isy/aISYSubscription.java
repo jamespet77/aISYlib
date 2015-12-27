@@ -70,7 +70,7 @@ public class aISYSubscription {
   }
 
   public Boolean hasListener() {
-    return (listener != null &&listener instanceof ISYEventListener);
+    return (listener != null && listener instanceof ISYEventListener);
   }
 
   public void DisConnect() {
@@ -94,7 +94,7 @@ public class aISYSubscription {
       //    e.printStackTrace();
       //  }
       //}
-      setDebugging(aisy.getHostAddr(), auth);
+      //setDebugging(aisy.getHostAddr(), auth);
 
       ErrorNotify("Subscribe Subscription.");
 
@@ -168,14 +168,19 @@ public class aISYSubscription {
     SSLSocket isySocketSSL;
     Socket isySocket;
 
-    if (aisy.getSSLEnabled()) {
-      isySocketSSL = ConnectionManager.getSSLSocket(aisy);
-      writer = new OutputStreamWriter(isySocketSSL.getOutputStream());
-      reader = isySocketSSL.getInputStream();
-    } else {
-      isySocket = ConnectionManager.getSocket(aisy);
-      writer = new OutputStreamWriter(isySocket.getOutputStream());
-      reader = isySocket.getInputStream();
+    try {
+      if (aisy.getSSLEnabled()) {
+        isySocketSSL = ConnectionManager.getSSLSocket(aisy);
+        writer = new OutputStreamWriter(isySocketSSL.getOutputStream());
+        reader = isySocketSSL.getInputStream();
+      } else {
+        isySocket = ConnectionManager.getSocket(aisy);
+        writer = new OutputStreamWriter(isySocket.getOutputStream());
+        reader = isySocket.getInputStream();
+      }
+    } catch (NullPointerException e) {
+      e.printStackTrace();
+      return;
     }
 
     String subreq = "<s:Envelope><s:Body>" + "<u:Subscribe";
@@ -196,6 +201,7 @@ public class aISYSubscription {
       writer.flush();
     } catch (IOException e) {
       e.printStackTrace();
+      setRunning(false);
       return;
     }
 
@@ -619,6 +625,10 @@ public class aISYSubscription {
 
   public Boolean isRunning() {
     return running;
+  }
+
+  public Boolean isConnected() {
+    return isRunning() && hasSID;
   }
 
   public void setRunning(Boolean running) {
