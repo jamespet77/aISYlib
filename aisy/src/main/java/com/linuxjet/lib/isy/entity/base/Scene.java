@@ -5,7 +5,7 @@ import java.util.Vector;
 /**
  * Created by jamespet on 10/15/15.
  */
-public class Group implements Comparable<com.linuxjet.lib.isy.entity.base.Group> {
+public class Scene implements Comparable<Scene> {
 
   private String Name;
   private String CustomName;
@@ -17,18 +17,18 @@ public class Group implements Comparable<com.linuxjet.lib.isy.entity.base.Group>
   private Boolean Enabled = false;
   private Vector<String> members;
 
-  public Group() {
+  public Scene() {
     members = new Vector<>();
   }
 
-  public Group(com.linuxjet.lib.isy.entity.base.Group group) {
-    setName(group.getName());
-    setAddress(group.getAddress());
-    setElkID(group.getElkID());
-    setEnabled(group.getEnabled());
-    setFlag(group.getFlag());
-    setGroup(group.getGroup());
-    setMembers(group.getMembers());
+  public Scene(Scene scene) {
+    setName(scene.getName());
+    setAddress(scene.getAddress());
+    setElkID(scene.getElkID());
+    setEnabled(scene.getEnabled());
+    setFlag(scene.getFlag());
+    setGroup(scene.getGroup());
+    setMembers(scene.getMembers());
   }
 
   public String getAddress() {
@@ -108,11 +108,11 @@ public class Group implements Comparable<com.linuxjet.lib.isy.entity.base.Group>
 
   @Override
   public String toString() {
-    return "Name:" + getName() + " | Addr:" + getAddress() + " | Group:" + getGroup() + " | Flag:" + getFlag() + " | ElkID:" + getElkID();
+    return "Name:" + getName() + " | Addr:" + getAddress() + " | Scene:" + getGroup() + " | Flag:" + getFlag() + " | ElkID:" + getElkID();
   }
 
   @Override
-  public int compareTo(com.linuxjet.lib.isy.entity.base.Group another) {
+  public int compareTo(Scene another) {
     if (getName() == null || getName().equals("")) return 1;
     if (another.getName() == null || another.getName().equals("")) return -1;
     if (getName().substring(0,getName().indexOf(".") + 1).compareTo(another.getName().substring(0,another.getName().indexOf(".") + 1)) == 0) {

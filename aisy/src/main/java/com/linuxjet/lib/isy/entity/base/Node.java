@@ -17,11 +17,13 @@ public class Node implements Comparable<Node> {
   private String Flag;
   private String Folder;
   private String Primary;
+  private int Family;
   private Boolean Enabled = false;
   private Vector<ISYNodeProperty> properties;
 
   public Node() {
     properties = new Vector<>();
+    setFamily(1);
   }
 
   public Node(Node node) {
@@ -34,6 +36,7 @@ public class Node implements Comparable<Node> {
     setFolder(node.getFolder());
     setPrimary(node.getPrimary());
     setProperties(node.getProperties());
+    setFamily(node.getFamily());
   }
 
   public String getAddress() {
@@ -93,6 +96,17 @@ public class Node implements Comparable<Node> {
   public void setType(String type) {
     Type = type;
   }
+
+  public int getFamily() {
+    if (Family > 1)
+      return Family;
+    return 1;
+  }
+
+  public void setFamily(int fam) {
+    Family = fam;
+  }
+
 
   public String getPrimary() {
     return Primary;

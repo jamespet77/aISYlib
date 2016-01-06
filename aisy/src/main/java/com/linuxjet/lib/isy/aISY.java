@@ -53,11 +53,13 @@ public class aISY {
   }
 
   public void Stop() {
-    aISYSubscription.setRunning(false);
+    if (aISYSubscription != null)
+      aISYSubscription.setRunning(false);
     new Thread(new RunDisconnect(new TaskListener() {
       @Override
       public void onFinished(String result) {
-        sub_thread.interrupt();
+        if (sub_thread != null)
+          sub_thread.interrupt();
       }
 
     })).start();
@@ -72,7 +74,8 @@ public class aISY {
     }
     @Override
     public void run() {
-      aISYSubscription.DisConnect();
+      if (aISYSubscription != null)
+        aISYSubscription.DisConnect();
       if (listener != null) {
         listener.onFinished("");
       }
