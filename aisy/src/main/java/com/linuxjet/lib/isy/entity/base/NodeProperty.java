@@ -1,9 +1,9 @@
-package com.linuxjet.lib.isy.entity;
+package com.linuxjet.lib.isy.entity.base;
 
 /**
  * Created by jamespet on 10/23/15.
  */
-public class ISYNodeProperty {
+public class NodeProperty {
   private String Id;
   private int value = 0;
   private String formatted;

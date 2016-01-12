@@ -33,4 +33,7 @@ public interface ISYEventListener {
   void onStatusUpdate(ISYEvent event);
   void onDefault(ISYEvent event);
 
+  void onSubscriptionConnected();
+  void onConnectionFailure();
+  void onUnsubscribe();
 }

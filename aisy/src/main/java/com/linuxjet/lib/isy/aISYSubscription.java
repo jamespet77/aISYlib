@@ -34,6 +34,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import static com.linuxjet.lib.isy.util.XmlUtil.asList;
+import static com.linuxjet.lib.isy.util.XmlUtil.prettyPrint;
 
 /**
  * Created by jamespet on 10/21/15.
@@ -50,6 +51,7 @@ public class aISYSubscription {
   private String auth;
   private HttpURLConnection request;
   private Boolean hasSID;
+  private Boolean InitialLoad = false;
 
   private Boolean running;
   private String SID;
@@ -110,6 +112,7 @@ public class aISYSubscription {
         Thread.sleep(50000);
       } catch (InterruptedException e) {
         Log.d(TAG, "Main Thread Subscription has stopped - this is probably expected");
+        //listener.onConnectionFailure();
       }
     }
 
@@ -150,15 +153,7 @@ public class aISYSubscription {
         return;
       }
 
-    //BufferedReader bufreader = new BufferedReader(new InputStreamReader(reader));
-    //StringBuilder retVal = new StringBuilder();
-    //String tmpStr;
-    //while((tmpStr = bufreader.readLine()) != null) {
-    //  retVal.append(tmpStr);
-    //}
-
-    //Log.d(TAG,"UNSUBSCRIBE: " + retVal.toString());
-
+    listener.onUnsubscribe();
     hasSID = false;
   }
 
@@ -244,12 +239,15 @@ public class aISYSubscription {
       } catch (SocketException e) {
         Log.d(TAG,"Network Connection Lost");
         hasSID = false;
+        listener.onConnectionFailure();
       } catch (SSLException e) {
         Log.d(TAG,"Network Connection Lost");
         hasSID = false;
+        listener.onConnectionFailure();
       }
       headerBuffer.setLength(0);
     } while (hasSID);
+    listener.onConnectionFailure();
   }
 
   private void Subscribe(InputStream xml) {
@@ -275,6 +273,8 @@ public class aISYSubscription {
           SID = isy_event.getTextContent();
           Log.d(TAG,"Subscribing to SID: " + SID);
           hasSID = true;
+          listener.onSubscriptionConnected();
+          InitialLoad = true;
         }
       }
     }
@@ -348,7 +348,7 @@ public class aISYSubscription {
           } else if (event_node.getNodeName().equals("fmtAct")) {
             FormatAct = event_node.getTextContent();
           } else {
-            //Unknown data
+            Log.d(TAG,"Unknown Param in return: " + event_node.getNodeName() + " data" + event_node.getTextContent());
           }
         }
 
@@ -632,6 +632,7 @@ public class aISYSubscription {
   }
 
   public void setRunning(Boolean running) {
+    if (!running) listener.onConnectionFailure();
     this.running = running;
   }
 

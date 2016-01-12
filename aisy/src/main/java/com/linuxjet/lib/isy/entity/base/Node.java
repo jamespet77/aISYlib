@@ -1,7 +1,5 @@
 package com.linuxjet.lib.isy.entity.base;
 
-import com.linuxjet.lib.isy.entity.ISYNodeProperty;
-
 import java.util.Vector;
 
 /**
@@ -19,7 +17,7 @@ public class Node implements Comparable<Node> {
   private String Primary;
   private int Family;
   private Boolean Enabled = false;
-  private Vector<ISYNodeProperty> properties;
+  private Vector<NodeProperty> properties;
 
   public Node() {
     properties = new Vector<>();
@@ -129,29 +127,29 @@ public class Node implements Comparable<Node> {
     return false;
   }
 
-  public void addProperty(ISYNodeProperty property) {
+  public void addProperty(NodeProperty property) {
     properties.add(property);
   }
 
-  public ISYNodeProperty getProperty(String id) {
+  public NodeProperty getProperty(String id) {
     if (properties != null && properties.size() > 0) {
-      for(ISYNodeProperty p : properties) {
+      for(NodeProperty p : properties) {
         if (p != null && p.getId() != null  && p.getId().equals(id)) return p;
       }
     }
     return null;
   }
 
-  public ISYNodeProperty getProperty(int idx) {
+  public NodeProperty getProperty(int idx) {
     if (properties.size() > 0 && properties.size() > idx) return properties.get(idx);
     return null;
   }
 
-  public Vector<ISYNodeProperty> getProperties() {
+  public Vector<NodeProperty> getProperties() {
     return properties;
   }
 
-  public void setProperties(Vector<ISYNodeProperty> nodeProperties) {
+  public void setProperties(Vector<NodeProperty> nodeProperties) {
     properties = nodeProperties;
   }
 
