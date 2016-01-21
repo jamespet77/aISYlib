@@ -308,6 +308,8 @@ public class aISYSubscription {
       return;
     }
 
+    //Log.d(TAG,getStringFromDocument(xmld));
+
     if (xmld.hasChildNodes()) {
       xml_list = xmld.getChildNodes();
 
@@ -343,6 +345,8 @@ public class aISYSubscription {
               } else if (info.getNodeName().equals("value") || info.getNodeName().equals("unit")) {
                 if (!EventInfo.equals(info.getTextContent()))
                   EventInfo += info.getTextContent();
+              } else if (info.getNodeName().equals("enabled")) {
+                EventInfo += info.getTextContent();
               }
             }
           } else if (event_node.getNodeName().equals("fmtAct")) {
