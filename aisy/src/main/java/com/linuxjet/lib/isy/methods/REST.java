@@ -1,7 +1,9 @@
 package com.linuxjet.lib.isy.methods;
 
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.util.Base64;
+import android.util.Log;
 
 import com.linuxjet.lib.isy.aISY;
 import com.linuxjet.lib.isy.listeners.TaskListener;
@@ -42,13 +44,14 @@ public class REST {
   }
 
   public String doGet(String str,TaskListener l) {
-      RequestTask task = new RequestTask(l);
+    final RequestTask task = new RequestTask(str,false,l);
     if (l != null) {
-      task.execute(str, false);
+
+      task.execute();
       return null;
     }
     try {
-      return task.execute(str,false).get(5000,TimeUnit.MILLISECONDS);
+      return task.execute().get(5000,TimeUnit.MILLISECONDS);
     } catch (InterruptedException e) {
       e.printStackTrace();
     } catch (ExecutionException e) {
@@ -60,13 +63,13 @@ public class REST {
   }
 
   public String doPost(String str,TaskListener l) {
-    RequestTask task = new RequestTask(l);
+    RequestTask task = new RequestTask(str,true,l);
     if (l != null) {
-      task.execute(str, true);
+      task.execute();
       return null;
     }
     try {
-      return task.execute(str,true).get(5000, TimeUnit.MILLISECONDS);
+      return task.execute().get(5000, TimeUnit.MILLISECONDS);
     } catch (InterruptedException e) {
       e.printStackTrace();
     } catch (ExecutionException e) {
@@ -77,19 +80,23 @@ public class REST {
     return null;
   }
 
-  class RequestTask extends AsyncTask<Object, Void, String> {
+  class RequestTask extends AsyncTask<Void, Void, String> {
 
     // This is the reference to the associated listener
     private final TaskListener taskListener;
+    private final String mCmd;
+    private final Boolean isPost;
 
-    public RequestTask(TaskListener listener) {
+    public RequestTask(String cmd, Boolean mpost, TaskListener listener) {
       // The listener reference is passed in through the constructor
       this.taskListener = listener;
+      this.mCmd = cmd;
+      this.isPost = mpost;
     }
 
     @Override
-    protected String doInBackground(Object... params) {
-      StringBuilder tmp = request((String)params[0],(Boolean)params[1]);
+    protected String doInBackground(Void... params) {
+      StringBuilder tmp = request(mCmd,isPost);
       if (tmp != null) return tmp.toString();
       return null;
     }
@@ -114,6 +121,7 @@ public class REST {
       if (aISY.getSSLEnabled()) {
         url = new URL("https://" + aISY.getHostAddr() + (cmd.replace(" ","%20")));
         request = (HttpURLConnection) url.openConnection();
+        request.setConnectTimeout(1000);
         try {
           sslfactory = new TrustAllSSLSocketFactory();
         } catch (KeyManagementException e) {
@@ -129,6 +137,8 @@ public class REST {
       } else {
         url = new URL("http://" + aISY.getHostAddr() + (cmd.replace(" ","%20")));
         request = (HttpURLConnection) url.openConnection();
+        request.setConnectTimeout(1000);
+
       }
       if (usePOST) {
         request.setRequestMethod("POST");

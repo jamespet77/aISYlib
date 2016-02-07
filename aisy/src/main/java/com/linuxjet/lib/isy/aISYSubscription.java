@@ -122,6 +122,7 @@ public class aISYSubscription {
 
       SSLSocket isySocketSSL;
       Socket isySocket;
+    try {
 
       if (aisy.getSSLEnabled()) {
         isySocketSSL = ConnectionManager.getSSLSocket(aisy);
@@ -138,7 +139,6 @@ public class aISYSubscription {
       subreq += "<SID>"+SID+"</SID>";
       subreq += "</u:Unsubscribe></s:Body></s:Envelope>";
 
-      try {
         writer.write("POST /services HTTP/1.1\n");
         writer.write("Content-Type: text/xml; charset=utf-8\n");
         writer.write("Authorization: " + auth + "\n");
