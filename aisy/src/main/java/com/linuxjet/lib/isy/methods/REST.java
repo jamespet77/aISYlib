@@ -122,6 +122,7 @@ public class REST {
         url = new URL("https://" + aISY.getHostAddr() + (cmd.replace(" ","%20")));
         request = (HttpURLConnection) url.openConnection();
         request.setConnectTimeout(1000);
+        request.setReadTimeout(5000);
         try {
           sslfactory = new TrustAllSSLSocketFactory();
         } catch (KeyManagementException e) {
@@ -138,6 +139,7 @@ public class REST {
         url = new URL("http://" + aISY.getHostAddr() + (cmd.replace(" ","%20")));
         request = (HttpURLConnection) url.openConnection();
         request.setConnectTimeout(1000);
+        request.setReadTimeout(5000);
 
       }
       if (usePOST) {
