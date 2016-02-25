@@ -29,6 +29,7 @@ public class Scene implements Comparable<Scene> {
     setFlag(scene.getFlag());
     setGroup(scene.getGroup());
     setMembers(scene.getMembers());
+    setCustomName(scene.getCustomName());
   }
 
   public String getAddress() {
@@ -79,6 +80,7 @@ public class Scene implements Comparable<Scene> {
   }
 
   public String getCustomName() {
+    if (CustomName == null) return getName();
     return CustomName;
   }
 

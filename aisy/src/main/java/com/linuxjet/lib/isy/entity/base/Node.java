@@ -1,5 +1,7 @@
 package com.linuxjet.lib.isy.entity.base;
 
+import android.util.Log;
+
 import java.util.Vector;
 
 /**
@@ -35,6 +37,7 @@ public class Node implements Comparable<Node> {
     setPrimary(node.getPrimary());
     setProperties(node.getProperties());
     setFamily(node.getFamily());
+    setCustomName(node.getCustomName());
   }
 
   public String getAddress() {
@@ -78,6 +81,7 @@ public class Node implements Comparable<Node> {
   }
 
   public String getCustomName() {
+    if (CustomName == null) return getName();
     return CustomName;
   }
 

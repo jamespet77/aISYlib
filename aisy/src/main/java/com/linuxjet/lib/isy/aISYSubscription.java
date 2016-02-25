@@ -148,10 +148,11 @@ public class aISYSubscription {
         writer.write(subreq);
         writer.write("\r\n");
         writer.flush();
-      } catch (IOException e) {
-        e.printStackTrace();
-        return;
-      }
+    } catch (NullPointerException e) {
+      e.printStackTrace();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
 
     listener.onUnsubscribe();
     hasSID = false;
