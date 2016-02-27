@@ -154,7 +154,9 @@ public class aISYSubscription {
       e.printStackTrace();
     }
 
-    listener.onUnsubscribe();
+    if (listener != null)
+        listener.onUnsubscribe();
+
     hasSID = false;
   }
 
@@ -240,15 +242,18 @@ public class aISYSubscription {
       } catch (SocketException e) {
         Log.d(TAG,"Network Connection Lost");
         hasSID = false;
-        listener.onConnectionFailure();
+        if (listener != null)
+          listener.onConnectionFailure();
       } catch (SSLException e) {
         Log.d(TAG,"Network Connection Lost");
         hasSID = false;
-        listener.onConnectionFailure();
+        if (listener != null)
+          listener.onConnectionFailure();
       }
       headerBuffer.setLength(0);
     } while (hasSID);
-    listener.onConnectionFailure();
+    if (listener != null)
+      listener.onConnectionFailure();
   }
 
   private void Subscribe(InputStream xml) {
@@ -274,7 +279,8 @@ public class aISYSubscription {
           SID = isy_event.getTextContent();
           Log.d(TAG,"Subscribing to SID: " + SID);
           hasSID = true;
-          listener.onSubscriptionConnected();
+          if (listener != null)
+            listener.onSubscriptionConnected();
           InitialLoad = true;
         }
       }
@@ -637,7 +643,9 @@ public class aISYSubscription {
   }
 
   public void setRunning(Boolean running) {
-    if (!running) listener.onConnectionFailure();
+    if (!running)
+      if (listener != null)
+        listener.onConnectionFailure();
     this.running = running;
   }
 
