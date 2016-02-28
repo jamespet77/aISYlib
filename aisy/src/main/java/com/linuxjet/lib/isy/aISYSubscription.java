@@ -21,6 +21,8 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.StringTokenizer;
 
 import javax.net.ssl.SSLException;
@@ -300,7 +302,7 @@ public class aISYSubscription {
     String Control = "";
     String Action = "";
     String Node = null;
-    String EventInfo = "";
+    Map<String,String> EventInfo = new HashMap<>();
     String FormatAct = "";
     String sid = "";
     int seqid = -1;
@@ -315,7 +317,7 @@ public class aISYSubscription {
       return;
     }
 
-    //Log.d(TAG,getStringFromDocument(xmld));
+    Log.d(TAG,getStringFromDocument(xmld));
 
     if (xmld.hasChildNodes()) {
       xml_list = xmld.getChildNodes();
@@ -347,14 +349,23 @@ public class aISYSubscription {
             Node = event_node.getTextContent();
           } else if (event_node.getNodeName().equals("eventInfo")) {
             for (org.w3c.dom.Node info : asList(event_node.getChildNodes())) {
-              if (info.getNodeName().equals("status")) {
+              if (info.getNodeName().equals("node")) {
+                for (org.w3c.dom.Node node : asList(info.getChildNodes())) {
+                  EventInfo.put(node.getNodeName(), node.getTextContent());
+                }
+              } else {
+                EventInfo.put(info.getNodeName(), info.getTextContent());
+              }
+              /*if (info.getNodeName().equals("status")) {
                 EventInfo = info.getTextContent();
               } else if (info.getNodeName().equals("value") || info.getNodeName().equals("unit")) {
                 if (!EventInfo.equals(info.getTextContent()))
                   EventInfo += info.getTextContent();
               } else if (info.getNodeName().equals("enabled")) {
                 EventInfo += info.getTextContent();
-              }
+              } else if (info.getNodeName().equals("newName")) {
+                EventInfo = info.getTextContent();
+              }*/
             }
           } else if (event_node.getNodeName().equals("fmtAct")) {
             FormatAct = event_node.getTextContent();
@@ -612,7 +623,7 @@ public class aISYSubscription {
   }
 
 
-  protected void NotifyAll(int seq, String control, String action, String node, String text) {
+  protected void NotifyAll(int seq, String control, String action, String node, Map<String,String> text) {
     Log.d(TAG, "SEQ: " + seq + " Control: " + control + " Action: " + action + " Node: " + node + " Text: " + text);
   }
 

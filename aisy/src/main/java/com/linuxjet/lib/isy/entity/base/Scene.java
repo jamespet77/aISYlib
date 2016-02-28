@@ -15,10 +15,12 @@ public class Scene implements Comparable<Scene> {
   private String Flag;
   private String Folder;
   private Boolean Enabled = false;
-  private Vector<String> members;
+  private Vector<String> controllers;
+  private Vector<String> responders;
 
   public Scene() {
-    members = new Vector<>();
+    controllers = new Vector<>();
+    responders = new Vector<>();
   }
 
   public Scene(Scene scene) {
@@ -28,7 +30,8 @@ public class Scene implements Comparable<Scene> {
     setEnabled(scene.getEnabled());
     setFlag(scene.getFlag());
     setGroup(scene.getGroup());
-    setMembers(scene.getMembers());
+    setResponders(scene.getResponders());
+    setControllers(scene.getControllers());
     setCustomName(scene.getCustomName());
   }
 
@@ -96,16 +99,25 @@ public class Scene implements Comparable<Scene> {
     Enabled = enabled;
   }
 
-  public void addMember(String memb) {
-    members.add(memb);
+  public void addResponder(String memb) {
+    responders.add(memb);
+  }
+  public void addController(String memb) {
+    controllers.add(memb);
   }
 
-  public Vector<String> getMembers() {
-    return members;
+  public Vector<String> getResponders() {
+    return responders;
+  }
+  public Vector<String> getControllers() {
+    return controllers;
   }
 
-  public void setMembers(Vector<String> mbrs) {
-    members = mbrs;
+  public void setResponders(Vector<String> mbrs) {
+    responders = mbrs;
+  }
+  public void setControllers(Vector<String> mbrs) {
+    controllers = mbrs;
   }
 
   @Override
