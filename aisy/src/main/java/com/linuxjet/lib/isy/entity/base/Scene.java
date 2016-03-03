@@ -7,6 +7,8 @@ import java.util.Vector;
  */
 public class Scene implements Comparable<Scene> {
 
+  public static int CONTROLLER = 16;
+  public static int RESPONDER = 32;
   private String Name;
   private String CustomName;
   private String Address;

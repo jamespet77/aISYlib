@@ -317,7 +317,7 @@ public class aISYSubscription {
       return;
     }
 
-    Log.d(TAG,getStringFromDocument(xmld));
+    //Log.d(TAG,getStringFromDocument(xmld));
 
     if (xmld.hasChildNodes()) {
       xml_list = xmld.getChildNodes();

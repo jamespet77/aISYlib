@@ -43,15 +43,15 @@ public class REST {
     auth = "Basic " + Base64.encodeToString((aISY.getUserName() + ":" + aISY.getPassWord()).getBytes(), Base64.DEFAULT);
   }
 
-  public String doGet(String str,TaskListener l) {
-    final RequestTask task = new RequestTask(str,false,l);
+  public String doGet(String str,int tmout,TaskListener l) {
+    final RequestTask task = new RequestTask(str,false,tmout,l);
     if (l != null) {
 
       task.execute();
       return null;
     }
     try {
-      return task.execute().get(5000,TimeUnit.MILLISECONDS);
+      return task.execute().get(tmout,TimeUnit.MILLISECONDS);
     } catch (InterruptedException e) {
       e.printStackTrace();
     } catch (ExecutionException e) {
@@ -62,14 +62,14 @@ public class REST {
     return null;
   }
 
-  public String doPost(String str,TaskListener l) {
-    RequestTask task = new RequestTask(str,true,l);
+  public String doPost(String str,int tmout, TaskListener l) {
+    RequestTask task = new RequestTask(str,true,tmout,l);
     if (l != null) {
       task.execute();
       return null;
     }
     try {
-      return task.execute().get(5000, TimeUnit.MILLISECONDS);
+      return task.execute().get(tmout, TimeUnit.MILLISECONDS);
     } catch (InterruptedException e) {
       e.printStackTrace();
     } catch (ExecutionException e) {
@@ -86,17 +86,19 @@ public class REST {
     private final TaskListener taskListener;
     private final String mCmd;
     private final Boolean isPost;
+    private final int timeout;
 
-    public RequestTask(String cmd, Boolean mpost, TaskListener listener) {
+    public RequestTask(String cmd, Boolean mpost, int mtimeout, TaskListener listener) {
       // The listener reference is passed in through the constructor
       this.taskListener = listener;
       this.mCmd = cmd;
       this.isPost = mpost;
+      this.timeout = mtimeout;
     }
 
     @Override
     protected String doInBackground(Void... params) {
-      StringBuilder tmp = request(mCmd,isPost);
+      StringBuilder tmp = request(mCmd,timeout,isPost);
       if (tmp != null) return tmp.toString();
       return null;
     }
@@ -115,14 +117,14 @@ public class REST {
     }
   }
 
-  public StringBuilder request(String cmd, Boolean usePOST) {
+  public StringBuilder request(String cmd, int timeout, Boolean usePOST) {
     StringBuilder retVal = null;
     try {
       if (aISY.getSSLEnabled()) {
         url = new URL("https://" + aISY.getHostAddr() + (cmd.replace(" ","%20")));
         request = (HttpURLConnection) url.openConnection();
         request.setConnectTimeout(1000);
-        request.setReadTimeout(5000);
+        request.setReadTimeout(timeout);
         try {
           sslfactory = new TrustAllSSLSocketFactory();
         } catch (KeyManagementException e) {
@@ -139,7 +141,7 @@ public class REST {
         url = new URL("http://" + aISY.getHostAddr() + (cmd.replace(" ","%20")));
         request = (HttpURLConnection) url.openConnection();
         request.setConnectTimeout(1000);
-        request.setReadTimeout(5000);
+        request.setReadTimeout(timeout);
 
       }
       if (usePOST) {

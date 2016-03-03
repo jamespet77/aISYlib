@@ -11,6 +11,7 @@ import com.linuxjet.lib.isy.methods.REST;
 public class aISYRequest {
   REST restInterface;
   aISY aISY;
+  int mTimeout = 5000;
 
   public aISYRequest(aISY j) {
     init(j);
@@ -20,16 +21,28 @@ public class aISYRequest {
     aISY = j;
     restInterface = new REST(j);
   }
-
+/*
   public String get(String reqstr,TaskListener l) {
     if (restInterface != null)
-      return restInterface.doGet("/rest" + reqstr,l);
+      return restInterface.doGet("/rest" + reqstr,mTimeout,l);
     return null;
   }
 
   public String post(String reqstr,TaskListener l) {
     if (restInterface != null)
-      return restInterface.doPost("/rest" + reqstr, l);
+      return restInterface.doPost("/rest" + reqstr,mTimeout, l);
+    return null;
+  }
+*/
+  public String get(String reqstr,int tmout, TaskListener l) {
+    if (restInterface != null)
+      return restInterface.doGet("/rest" + reqstr,tmout,l);
+    return null;
+  }
+
+  public String post(String reqstr,int tmout,TaskListener l) {
+    if (restInterface != null)
+      return restInterface.doPost("/rest" + reqstr,tmout, l);
     return null;
   }
 
