@@ -136,7 +136,7 @@ public class aISYSubscription {
         reader = isySocket.getInputStream();
       }
 
-      String subreq = "<s:Envelope><s:Body>" + "<u:UnSubscribee";
+      String subreq = "<s:Envelope><s:Body>" + "<u:Unsubscribe";
       subreq += " xmlns:u='urn:udi-com:service:X_Insteon_Lighting_Service:1'>";
       subreq += "<SID>"+SID+"</SID>";
       subreq += "</u:Unsubscribe></s:Body></s:Envelope>";
@@ -162,6 +162,9 @@ public class aISYSubscription {
     hasSID = false;
   }
 
+  public String getSID() {
+    return SID;
+  }
 
   private void doSubscribe(String auth) throws IOException {
 

@@ -1,9 +1,18 @@
 package com.linuxjet.lib.isy;
 
+import android.util.Base64;
+
 import com.linuxjet.lib.isy.listeners.TaskListener;
+import com.linuxjet.lib.isy.network.ConnectionManager;
 import com.linuxjet.lib.isy.network.ssl.NullHostNameVerifier;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStreamWriter;
+import java.net.Socket;
+
 import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLSocket;
 
 /**
  * Created by jamespet on 10/15/15.
@@ -121,5 +130,46 @@ public class aISY {
   public void useSSL(Boolean ssl) {
     SSLEnabled = ssl;
   }
+
+  public void abandon(String sID) throws IOException {
+
+    String auth = "Basic " + Base64.encodeToString((getUserName() + ":" + getPassWord()).getBytes(), Base64.DEFAULT);
+
+    SSLSocket isySocketSSL;
+    Socket isySocket;
+    try {
+
+      InputStream reader;
+      OutputStreamWriter writer;
+      if (getSSLEnabled()) {
+        isySocketSSL = ConnectionManager.getSSLSocket(this);
+        writer = new OutputStreamWriter(isySocketSSL.getOutputStream());
+        reader = isySocketSSL.getInputStream();
+      } else {
+        isySocket = ConnectionManager.getSocket(this);
+        writer = new OutputStreamWriter(isySocket.getOutputStream());
+        reader = isySocket.getInputStream();
+      }
+
+      String subreq = "<s:Envelope><s:Body>" + "<u:Unsubscribe";
+      subreq += " xmlns:u='urn:udi-com:service:X_Insteon_Lighting_Service:1'>";
+      subreq += "<SID>"+sID+"</SID>";
+      subreq += "</u:Unsubscribe></s:Body></s:Envelope>";
+      writer.write("POST /services HTTP/1.1\n");
+      writer.write("Content-Type: text/xml; charset=utf-8\n");
+      writer.write("Authorization: " + auth + "\n");
+      writer.write("Content-Length: " + (subreq.length()) + "\n");
+      writer.write("SOAPAction: urn:udi-com:device:X_Insteon_Lighting_Service:1#Unsubscribe\r\n");
+      writer.write("\r\n");
+      writer.write(subreq);
+      writer.write("\r\n");
+      writer.flush();
+    } catch (NullPointerException e) {
+      e.printStackTrace();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
 
 }
