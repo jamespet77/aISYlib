@@ -1,7 +1,5 @@
 package com.linuxjet.lib.isy.entity.base;
 
-import android.util.Log;
-
 import java.util.Vector;
 
 /**
@@ -159,7 +157,11 @@ public class Node implements Comparable<Node> {
 
   @Override
   public String toString() {
-    return "Name:" + getName() + " | Addr:" + getAddress() + " | Type: " + getType() + " | Flag:" + getFlag() + " | ElkID:" + getElkID();
+    String tmp =  "Name:" + getName() + " | Addr:" + getAddress() + " | Type: " + getType() + " | Flag:" + getFlag() + " | ElkID:" + getElkID() + "\n";
+    for (NodeProperty prop : getProperties()) {
+      tmp += prop.toString() + "\n";
+    }
+    return tmp;
   }
 
   @Override

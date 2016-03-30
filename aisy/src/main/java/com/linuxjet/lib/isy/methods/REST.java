@@ -1,9 +1,7 @@
 package com.linuxjet.lib.isy.methods;
 
 import android.os.AsyncTask;
-import android.os.Handler;
 import android.util.Base64;
-import android.util.Log;
 
 import com.linuxjet.lib.isy.aISY;
 import com.linuxjet.lib.isy.listeners.TaskListener;

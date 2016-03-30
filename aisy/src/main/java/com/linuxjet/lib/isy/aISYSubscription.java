@@ -36,7 +36,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import static com.linuxjet.lib.isy.util.XmlUtil.asList;
-import static com.linuxjet.lib.isy.util.XmlUtil.prettyPrint;
+import static com.linuxjet.lib.isy.util.XmlUtil.getStringFromInputStream;
 
 /**
  * Created by jamespet on 10/21/15.
@@ -136,7 +136,7 @@ public class aISYSubscription {
         reader = isySocket.getInputStream();
       }
 
-      String subreq = "<s:Envelope><s:Body>" + "<u:Unsubscribe";
+      String subreq = "<s:Envelope><s:Body>" + "<u:UnSubscribee";
       subreq += " xmlns:u='urn:udi-com:service:X_Insteon_Lighting_Service:1'>";
       subreq += "<SID>"+SID+"</SID>";
       subreq += "</u:Unsubscribe></s:Body></s:Envelope>";
@@ -269,7 +269,11 @@ public class aISYSubscription {
       xmld = builder.parse(xml);
     } catch (Exception e) {
       e.printStackTrace();
-      ErrorNotify("Error in XML" + xml);
+      try {
+        ErrorNotify("Error in XML" + getStringFromInputStream(xml));
+      } catch (IOException e1) {
+        e1.printStackTrace();
+      }
       return;
     }
 
@@ -349,7 +353,12 @@ public class aISYSubscription {
             Node = event_node.getTextContent();
           } else if (event_node.getNodeName().equals("eventInfo")) {
             for (org.w3c.dom.Node info : asList(event_node.getChildNodes())) {
-              if (info.getNodeName().equals("node")) {
+              if (info.hasAttributes()) {
+                for (org.w3c.dom.Node attr : asList(info.getAttributes())) {
+                  EventInfo.put(attr.getNodeName(),attr.getNodeValue());
+                }
+              }
+              if (info.hasChildNodes()) {
                 for (org.w3c.dom.Node node : asList(info.getChildNodes())) {
                   EventInfo.put(node.getNodeName(), node.getTextContent());
                 }

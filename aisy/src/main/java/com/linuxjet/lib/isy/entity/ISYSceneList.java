@@ -1,7 +1,7 @@
 package com.linuxjet.lib.isy.entity;
 
-import com.linuxjet.lib.isy.entity.base.Scene;
 import com.linuxjet.lib.isy.entity.base.ISYBaseList;
+import com.linuxjet.lib.isy.entity.base.Scene;
 
 import java.util.Vector;
 

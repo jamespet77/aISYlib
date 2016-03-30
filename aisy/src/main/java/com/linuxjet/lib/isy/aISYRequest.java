@@ -1,7 +1,5 @@
 package com.linuxjet.lib.isy;
 
-import android.util.Log;
-
 import com.linuxjet.lib.isy.listeners.TaskListener;
 import com.linuxjet.lib.isy.methods.REST;
 
