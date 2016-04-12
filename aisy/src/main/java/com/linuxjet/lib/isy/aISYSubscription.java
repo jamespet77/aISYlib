@@ -11,9 +11,11 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.NodeList;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.StringWriter;
 import java.net.HttpURLConnection;
@@ -37,6 +39,7 @@ import javax.xml.transform.stream.StreamResult;
 
 import static com.linuxjet.lib.isy.util.XmlUtil.asList;
 import static com.linuxjet.lib.isy.util.XmlUtil.getStringFromInputStream;
+import static com.linuxjet.lib.isy.util.XmlUtil.prettyPrint;
 
 /**
  * Created by jamespet on 10/21/15.
@@ -102,13 +105,10 @@ public class aISYSubscription {
 
       ErrorNotify("Subscribe Subscription.");
 
-      try {
       //  if (aisy.getNodeList() != null) {
+        //Log.d(TAG,auth);
           doSubscribe(auth);
       //  }
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
 
       try {
         Thread.sleep(50000);
@@ -166,7 +166,7 @@ public class aISYSubscription {
     return SID;
   }
 
-  private void doSubscribe(String auth) throws IOException {
+  private void doSubscribe(String auth) {
 
     SSLSocket isySocketSSL;
     Socket isySocket;
@@ -181,7 +181,7 @@ public class aISYSubscription {
         writer = new OutputStreamWriter(isySocket.getOutputStream());
         reader = isySocket.getInputStream();
       }
-    } catch (NullPointerException e) {
+    } catch (Exception e) {
       e.printStackTrace();
       return;
     }
@@ -192,12 +192,24 @@ public class aISYSubscription {
     subreq += "<duration>infinite</duration>";
     subreq += "</u:Subscribe></s:Body></s:Envelope>";
 
+
+    StringBuilder sb = new StringBuilder();
+    sb.append("POST /services HTTP/1.1\n");
+    sb.append("Host: "+ aisy.getHostAddr() + "\n");
+    sb.append("Content-Type: text/xml; charset=utf-8\n");
+    sb.append("Authorization: " + auth);
+    sb.append("Content-Length: " + (subreq.length()));
+    sb.append("\r\n");
+
+    //Log.d(TAG,sb.toString());
     try {
-      writer.write("POST /services HTTP/1.1\n");
-      writer.write("Content-Type: text/xml; charset=utf-8\n");
-      writer.write("Authorization: " + auth + "\n");
-      writer.write("Content-Length: " + (subreq.length()) + "\n");
-      writer.write("SOAPAction: urn:udi-com:device:X_Insteon_Lighting_Service:1#Subscribe\r\n");
+      //writer.write("POST /services HTTP/1.1\n");
+      //writer.write("Host: "+ aisy.getHostAddr() + "\n");
+      //writer.write("Content-Type: text/xml; charset=utf-8\n");
+      //writer.write("Authorization: " + auth + "\n");
+      //writer.write("Content-Length: " + (subreq.length()) + "\n");
+      //writer.write("SOAPAction: urn:udi-com:device:X_Insteon_Lighting_Service:1#Subscribe\r\n");
+      writer.write(sb.toString());
       writer.write("\r\n");
       writer.write(subreq);
       writer.write("\r\n");
@@ -207,7 +219,12 @@ public class aISYSubscription {
       setRunning(false);
       return;
     }
+    //BufferedReader rr = new BufferedReader(new InputStreamReader(reader));
+    //String line;
 
+    //while ((line = rr.readLine()) != null) {
+    //  Log.d(TAG,line);
+    //}
     int content_length = 0;
     StringBuffer headerBuffer = new StringBuffer();
     int charValue;
@@ -244,12 +261,8 @@ public class aISYSubscription {
             }
           }
         }
-      } catch (SocketException e) {
-        Log.d(TAG,"Network Connection Lost");
-        hasSID = false;
-        if (listener != null)
-          listener.onConnectionFailure();
-      } catch (SSLException e) {
+      } catch (Exception e) {
+        e.printStackTrace();
         Log.d(TAG,"Network Connection Lost");
         hasSID = false;
         if (listener != null)
@@ -279,6 +292,8 @@ public class aISYSubscription {
       }
       return;
     }
+
+    //Log.d(TAG,getStringFromDocument(xmld));
 
     if (xmld.hasChildNodes()) {
       xml_list = xmld.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(0).getChildNodes();
